@@ -36,6 +36,13 @@ export const Form = styled.form`
   }
 `
 export const ResultSearch = styled.div`
+  div {
+    margin-top: 20px;
+    border-radius: 10px;
+    max-width: 700px;
+    background: #fff;
+    padding: 10px 15px;
+  }
   p strong {
   display: flex;
   align-items: center;
