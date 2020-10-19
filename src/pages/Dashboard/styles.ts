@@ -35,15 +35,21 @@ export const Form = styled.form`
     }
   }
 `
+export const Error = styled.span`
+  display: block;
+  color: #c53030;
+  margin-top: 8px;
+`
+
 export const ResultSearch = styled.div`
-  div {
+  a {
+    text-decoration: none;
     margin-top: 20px;
     border-radius: 10px;
     max-width: 700px;
-    background: #fff;
     padding: 10px 15px;
   }
-  p strong {
+  strong {
   display: flex;
   align-items: center;
   margin-top: 16px

@@ -1,6 +1,7 @@
 import React, {useState, FormEvent} from 'react'
+import {Link} from 'react-router-dom'
 
-import { Form, ResultSearch } from './styles'
+import { Form, ResultSearch, Error } from './styles'
 import api from '../../services/api'
 
 interface Planet {
@@ -19,17 +20,29 @@ interface Planet {
 
 const Dashboard: React.FC = () => {
   const [newPlanet, setNewPlanet] = useState('')
+  const [inputError, setInputError] = useState('')
   const [planets, setPlanets] = useState<Planet[]>([])
 
   async function handleSearchPlanet(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
-    const response = await api.get<Planet>(`/${newPlanet}`)
+    if(!newPlanet) {
+      setInputError('Digite o id do Planeta que deseja buscar')
+      return
+    }
 
-    const planet = response.data
+    try {
+      const response = await api.get<Planet>(`/${newPlanet}`)
 
-    setPlanets([...planets, planet])
-    setNewPlanet('')
+      const planet = response.data
+
+      setPlanets([...planets, planet])
+      setNewPlanet('')
+      setInputError('')
+    } catch (err) {
+      setInputError('Erro na busca pelo planeta')
+    }
+
   }
 
   return (
@@ -43,39 +56,17 @@ const Dashboard: React.FC = () => {
         <button>Pesquisar</button>
       </Form>
 
+      {inputError && <Error>{inputError}</Error> }
+
       <ResultSearch>
         {planets.map(planet => (
 
-          <div key={planet.name}>
+          <Link key={planet.name} to={`/details/${planet.name}`}>
             <p>
               <strong>Nome:</strong>
               <span>{planet.name}</span>
             </p>
-            <p>
-              <strong>Período de rotação:</strong>
-              <span>{planet.rotation_period}</span>
-            </p>
-            <p>
-              <strong>Período de orbita:</strong>
-              <span>{planet.orbital_period}</span>
-            </p>
-            <p>
-              <strong>Clima:</strong>
-              <span>{planet.climate}</span>
-            </p>
-            <p>
-              <strong>terreno:</strong>
-              <span>{planet.terrain}</span>
-            </p>
-            <p>
-              <strong>agua superfície:</strong>
-              <span>{planet.surface_water}</span>
-            </p>
-            <p>
-              <strong>população:</strong>
-              <span>{planet.population}</span>
-            </p>
-          </div>
+          </Link>
         ))}
       </ResultSearch>
     </>
